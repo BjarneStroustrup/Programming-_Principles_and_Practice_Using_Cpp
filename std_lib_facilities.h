@@ -84,12 +84,12 @@ template< class T> struct Vector : public std::vector<T> {
 
 	T& operator[](unsigned int i) // rather than return at(i);
 	{
-		if (i<0||this->size()<=i) throw Range_error(i);
+		if (this->size()<=i) throw Range_error(i);
 		return std::vector<T>::operator[](i);
 	}
 	const T& operator[](unsigned int i) const
 	{
-		if (i<0||this->size()<=i) throw Range_error(i);
+		if (this->size()<=i) throw Range_error(i);
 		return std::vector<T>::operator[](i);
 	}
 };
@@ -104,13 +104,13 @@ struct String : std::string {
 
 	char& operator[](unsigned int i) // rather than return at(i);
 	{
-		if (i<0||size()<=i) throw Range_error(i);
+		if (size()<=i) throw Range_error(i);
 		return std::string::operator[](i);
 	}
 
 	const char& operator[](unsigned int i) const
 	{
-		if (i<0||size()<=i) throw Range_error(i);
+		if (size()<=i) throw Range_error(i);
 		return std::string::operator[](i);
 	}
 };
