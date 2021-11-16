@@ -1,28 +1,30 @@
 /*
-   std_lib_facilities.h
+std_lib_facilities.h
 */
 
 /*
-	simple "Programming: Principles and Practice using C++ (second edition)" course header to
-	be used for the first few weeks.
-	It provides the most common standard headers (in the global namespace)
-	and minimal exception/error support.
+simple "Programming: Principles and Practice using C++ (second edition)" course header to
+be used for the first few weeks.
+It provides the most common standard headers (in the global namespace)
+and minimal exception/error support.
 
-	Students: please don't try to understand the details of headers just yet.
-	All will be explained. This header is primarily used so that you don't have
-	to understand every concept all at once.
+Students: please don't try to understand the details of headers just yet.
+All will be explained. This header is primarily used so that you don't have
+to understand every concept all at once.
 
-	By Chapter 10, you don't need this file and after Chapter 21, you'll understand it
+By Chapter 10, you don't need this file and after Chapter 21, you'll understand it
 
-	Revised April 25, 2010: simple_error() added
-	
-	Revised November 25 2013: remove support for pre-C++11 compilers, use C++11: <chrono>
-	Revised November 28 2013: add a few container algorithms
-	Revised June 8 2014: added #ifndef to workaround Microsoft C++11 weakness
+Revised April 25, 2010: simple_error() added
+
+Revised November 25 2013: remove support for pre-C++11 compilers, use C++11: <chrono>
+Revised November 28 2013: add a few container algorithms
+Revised June 8 2014: added #ifndef to workaround Microsoft C++11 weakness
+Revised Febrary 2 2015: randint() can now be seeded (see exercise 5.13).
+Revised August 3, 2020: a cleanup removing support for ancient compilers
 */
 
 #ifndef H112
-#define H112 251113L
+#define H112 080315L
 
 
 #include<iostream>
@@ -45,8 +47,6 @@
 //------------------------------------------------------------------------------
 
 
-//------------------------------------------------------------------------------
-
 typedef long Unicode;
 
 //------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ template<class T> string to_string(const T& t)
 
 struct Range_error : out_of_range {	// enhanced vector range error reporting
 	int index;
-	Range_error(int i) :out_of_range("Range error: "+to_string(i)), index(i) { }
+	Range_error(int i) :out_of_range("Range error: " + to_string(i)), index(i) { }
 };
 
 
@@ -70,26 +70,25 @@ struct Range_error : out_of_range {	// enhanced vector range error reporting
 template< class T> struct Vector : public std::vector<T> {
 	using size_type = typename std::vector<T>::size_type;
 
-#ifdef _MSC_VER
+/* #ifdef _MSC_VER
 	// microsoft doesn't yet support C++11 inheriting constructors
 	Vector() { }
 	explicit Vector(size_type n) :std::vector<T>(n) {}
-	Vector(size_type n, const T& v) :std::vector<T>(n,v) {}
+	Vector(size_type n, const T& v) :std::vector<T>(n, v) {}
 	template <class I>
 	Vector(I first, I last) : std::vector<T>(first, last) {}
 	Vector(initializer_list<T> list) : std::vector<T>(list) {}
-#else
+*/
 	using std::vector<T>::vector;	// inheriting constructor
-#endif
 
 	T& operator[](unsigned int i) // rather than return at(i);
 	{
-		if (i<0||this->size()<=i) throw Range_error(i);
+		if (i<0 || this->size() <= i) throw Range_error(i);
 		return std::vector<T>::operator[](i);
 	}
 	const T& operator[](unsigned int i) const
 	{
-		if (i<0||this->size()<=i) throw Range_error(i);
+		if (i<0 || this->size() <= i) throw Range_error(i);
 		return std::vector<T>::operator[](i);
 	}
 };
@@ -100,17 +99,17 @@ template< class T> struct Vector : public std::vector<T> {
 // trivially range-checked string (no iterator checking):
 struct String : std::string {
 	using size_type = std::string::size_type;
-//	using string::string;
+	//	using string::string;
 
 	char& operator[](unsigned int i) // rather than return at(i);
 	{
-		if (i<0||size()<=i) throw Range_error(i);
+		if (i<0 || size() <= i) throw Range_error(i);
 		return std::string::operator[](i);
 	}
 
 	const char& operator[](unsigned int i) const
 	{
-		if (i<0||size()<=i) throw Range_error(i);
+		if (i<0 || size() <= i) throw Range_error(i);
 		return std::string::operator[](i);
 	}
 };
@@ -118,19 +117,19 @@ struct String : std::string {
 
 namespace std {
 
-    template<> struct hash<String>
-    {
-        size_t operator()(const String& s) const
-        {
-            return hash<std::string>()(s);
-        }
-    };
+	template<> struct hash<String>
+	{
+		size_t operator()(const String& s) const
+		{
+			return hash<std::string>()(s);
+		}
+	};
 
 } // of namespace std
 
 
 struct Exit : runtime_error {
-	Exit(): runtime_error("Exit") {}
+	Exit() : runtime_error("Exit") {}
 };
 
 // error() simply disguises throws:
@@ -141,13 +140,13 @@ inline void error(const string& s)
 
 inline void error(const string& s, const string& s2)
 {
-	error(s+s2);
+	error(s + s2);
 }
 
 inline void error(const string& s, int i)
 {
 	ostringstream os;
-	os << s <<": " << i;
+	os << s << ": " << i;
 	error(os.str());
 }
 
@@ -155,7 +154,7 @@ inline void error(const string& s, int i)
 template<class T> char* as_bytes(T& i)	// needed for binary I/O
 {
 	void* addr = &i;	// get the address of the first byte
-						// of memory used to store the object
+	// of memory used to store the object
 	return static_cast<char*>(addr); // treat that memory as bytes
 }
 
@@ -171,13 +170,13 @@ inline void keep_window_open()
 
 inline void keep_window_open(string s)
 {
-	if (s=="") return;
+	if (s == "") return;
 	cin.clear();
-	cin.ignore(120,'\n');
+	cin.ignore(120, '\n');
 	for (;;) {
 		cout << "Please enter " << s << " to exit\n";
 		string ss;
-		while (cin >> ss && ss!=s)
+		while (cin >> ss && ss != s)
 			cout << "Please enter " << s << " to exit\n";
 		return;
 	}
@@ -202,21 +201,27 @@ inline void simple_error(string s)	// write ``error: s and exit program
 template<class R, class A> R narrow_cast(const A& a)
 {
 	R r = R(a);
-	if (A(r)!=a) error(string("info loss"));
+	if (A(r) != a) error(string("info loss"));
 	return r;
 }
 
 // random number generators. See 24.7.
 
+inline default_random_engine& get_rand()
+{
+	static default_random_engine ran;	// note: not thread_local
+	return ran;
+};
 
+inline void seed_randint(int s) { get_rand().seed(s); }
 
-inline int randint(int min, int max) { static default_random_engine ran; return uniform_int_distribution<>{min, max}(ran); }
+inline int randint(int min, int max) { return uniform_int_distribution<>{min, max}(get_rand()); }
 
 inline int randint(int max) { return randint(0, max); }
 
 //inline double sqrt(int x) { return sqrt(double(x)); }	// to match C++0x
 
-// container algorithms. See 21.9.
+// container algorithms. See 21.9.   // C++ has better versions of this:
 
 template<typename C>
 using Value_type = typename C::value_type;
@@ -225,7 +230,7 @@ template<typename C>
 using Iterator = typename C::iterator;
 
 template<typename C>
-	// requires Container<C>()
+// requires Container<C>()
 void sort(C& c)
 {
 	std::sort(c.begin(), c.end());
@@ -239,7 +244,7 @@ void sort(C& c, Pred p)
 }
 
 template<typename C, typename Val>
-	// requires Container<C>() && Equality_comparable<C,Val>()
+// requires Container<C>() && Equality_comparable<C,Val>()
 Iterator<C> find(C& c, Val v)
 {
 	return std::find(c.begin(), c.end(), v);

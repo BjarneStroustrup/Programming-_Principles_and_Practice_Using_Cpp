@@ -7,7 +7,7 @@
 //#include<string>
 //#include<cmath>
 #include "fltk.h"
-//#include "std_lib_facilities.h"
+#include "std_lib_facilities.h"
 
 namespace Graph_lib {
 // defense against ill-behaved Linux macros:
@@ -26,7 +26,7 @@ struct Color {
 
 	Color(Color_type cc) :c(Fl_Color(cc)), v(visible) { }
 	Color(Color_type cc, Transparency vv) :c(Fl_Color(cc)), v(vv) { }
-	Color(int cc) :c(Fl_Color(cc)), v(visible) { }
+	Color(unsigned int cc) :c(Fl_Color(cc)), v(visible) { }
 	Color(Transparency vv) :c(Fl_Color()), v(vv) { }
 
 	int as_int() const { return c; }

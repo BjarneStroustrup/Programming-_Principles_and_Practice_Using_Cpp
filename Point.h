@@ -8,7 +8,7 @@ namespace Graph_lib {
 
 struct Point {
 	int x,y;
-//	Point(int xx, int yy) : x(xx), y(yy) { }
+	Point(int xx, int yy) : x(xx), y(yy) { }
 //	Point() :x(0), y(0) { }
 
 //	Point& operator+=(Point d) { x+=d.x; y+=d.y; return *this; }
