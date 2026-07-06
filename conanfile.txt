@@ -1,0 +1,6 @@
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[requires]
+fltk/1.4.5
